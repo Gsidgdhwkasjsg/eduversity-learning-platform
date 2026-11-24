@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+  }
+  
+  body {
+    background-color: #06040a;
+    color: #e2e8f0;
+    overflow-x: hidden;
+  }
+
+  /* Custom Neon Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #06040a;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #ff007a 0%, #7928ca 50%, #00f0ff 100%);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #ff54a2 0%, #9d4edd 50%, #70f9ff 100%);
+  }
+}
+
+@layer utilities {
+  .text-glow-cyan {
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.7), 0 0 25px rgba(0, 240, 255, 0.4);
+  }
+  .text-glow-pink {
+    text-shadow: 0 0 10px rgba(255, 0, 122, 0.7), 0 0 25px rgba(255, 0, 122, 0.4);
+  }
+  .text-glow-purple {
+    text-shadow: 0 0 10px rgba(121, 40, 202, 0.8), 0 0 25px rgba(121, 40, 202, 0.5);
+  }
+  
+  .glass-card {
+    background: rgba(14, 10, 26, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  
+  .glass-card-hover {
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .glass-card-hover:hover {
+    background: rgba(22, 16, 40, 0.85);
+    border-color: rgba(255, 0, 122, 0.3);
+    box-shadow: 0 12px 40px -10px rgba(121, 40, 202, 0.3);
+    transform: translateY(-4px);
+  }
+
+  .cyber-gradient {
+    background: linear-gradient(135deg, #ff007a 0%, #7928ca 50%, #00f0ff 100%);
+  }
+
+  .cyber-gradient-text {
+    background: linear-gradient(135deg, #ffffff 0%, #00f0ff 40%, #ff007a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .cyber-grid {
+    background-size: 40px 40px;
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  }
+
+  .cyber-dots {
+    background-image: radial-gradient(rgba(255, 0, 122, 0.15) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+}
