@@ -6,6 +6,11 @@
 
 **EDUVERSITY** is a modern, responsive, full-stack online learning platform engineered with a premium EdTech SaaS aesthetic (inspired by Coursera, Udemy, Skillshare, and Linear). It provides end-to-end capabilities for discovering, enrolling, learning, rating, and managing educational courses with verifiable certificates and comprehensive administrative oversight.
 
+### 🌐 Live Production Deployments
+- **Vercel Production (Live)**: **[https://codeenv-theta.vercel.app](https://codeenv-theta.vercel.app)**
+- **GitHub Pages (Live)**: **[https://gsidgdhwkasjsg.github.io/eduversity-learning-platform/](https://gsidgdhwkasjsg.github.io/eduversity-learning-platform/)**
+- **GitHub Repository**: **[https://github.com/Gsidgdhwkasjsg/eduversity-learning-platform](https://github.com/Gsidgdhwkasjsg/eduversity-learning-platform)**
+
 ---
 
 ## 🌟 Key Features
