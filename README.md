@@ -4,10 +4,11 @@
 
 ---
 
-## 🌟 Live Public Website
+## 🌟 Live Public Websites
 
-- **Public Live HTTPS URL**: Deployed & active via Cloudflare Edge Network / Vercel
-- **Tech Stack**: React 18, TypeScript, Tailwind CSS, Lucide Icons, Framer Motion, Canvas Confetti, Web Audio API Synthesizer, QRCode Generator
+- **GitHub Pages Live HTTPS URL**: [https://gsidgdhwkasjsg.github.io/aura-2026-fest/](https://gsidgdhwkasjsg.github.io/aura-2026-fest/)
+- **Cloudflare Edge Live HTTPS URL**: [https://championships-few-composition-brighton.trycloudflare.com](https://championships-few-composition-brighton.trycloudflare.com)
+- **GitHub Source Code Repository**: [https://github.com/Gsidgdhwkasjsg/aura-2026-fest](https://github.com/Gsidgdhwkasjsg/aura-2026-fest)
 
 ---
 
@@ -83,7 +84,8 @@
 
 ```bash
 # 1. Clone or open the repository
-cd code.env
+git clone https://github.com/Gsidgdhwkasjsg/aura-2026-fest.git
+cd aura-2026-fest
 
 # 2. Install dependencies
 npm install
@@ -102,40 +104,23 @@ npm run preview
 
 ## 🌐 Deployment Instructions
 
-### Deploy to Vercel (Recommended)
-1. Push this project to your GitHub account:
-   ```bash
-   git add .
-   git commit -m "feat: complete AURA 2026 festival website"
-   git remote add origin https://github.com/<YOUR_USERNAME>/aura-2026-fest.git
-   git push -u origin main
-   ```
-2. Go to [vercel.com](https://vercel.com) and click **"Add New Project"**.
-3. Import your GitHub repository `aura-2026-fest`.
-4. Framework preset will automatically detect **Vite**.
-5. Click **"Deploy"** — your live website URL will be ready in under 60 seconds!
+### Automatic Deployment via GitHub Actions
+Every commit pushed to the `main` branch automatically triggers `.github/workflows/deploy.yml` which builds and publishes the production site to **GitHub Pages** within 60 seconds.
 
-### Deploy to Netlify
+### Deploy to Vercel (Optional alternative)
+1. Go to [vercel.com](https://vercel.com) and click **"Add New Project"**.
+2. Import your GitHub repository `Gsidgdhwkasjsg/aura-2026-fest`.
+3. Framework preset will automatically detect **Vite**.
+4. Click **"Deploy"**.
+
+### Deploy to Netlify (Optional alternative)
 1. Go to [app.netlify.com](https://app.netlify.com).
 2. Click **"Add new site" -> "Import an existing project"**.
-3. Select your GitHub repository.
+3. Select `Gsidgdhwkasjsg/aura-2026-fest`.
 4. Build command: `npm run build` | Publish directory: `dist`.
 5. Click **"Deploy site"**.
 
 ### Connecting a Custom Domain (e.g. `aurafest2026.com`)
-1. In your Vercel or Netlify project dashboard, navigate to **Settings -> Domains**.
-2. Click **Add Domain** and enter your custom domain name (e.g., `aura2026.com` or `aura.college.edu`).
-3. Add the provided DNS records in your domain registrar (GoDaddy, Namecheap, Cloudflare, etc.):
-   - `CNAME` pointing to `cname.vercel-dns.com` (or Netlify equivalent).
-   - `A` record pointing to the specified IP address.
-4. SSL/TLS HTTPS certificates will be issued automatically within minutes.
-
----
-
-## ✏️ How to Update Website Content
-
-- **Event Schedule & Competitions**: Open [`src/data/festivalData.ts`](./src/data/festivalData.ts) and edit the `FESTIVAL_EVENTS` array. Add new prizes, change timings, or adjust rules.
-- **Headliners & Performers**: Edit the `HEADLINERS_AND_PERFORMERS` array in [`src/data/festivalData.ts`](./src/data/festivalData.ts) to update artist names, bios, genres, and photos.
-- **Sponsors**: Update the `SPONSORS` array with new partner brands.
-- **Committee Contacts**: Update `COMMITTEE_MEMBERS` with new student coordinators and phone numbers.
-- **Venue & Dates**: Update `FESTIVAL_INFO` at the top of [`src/data/festivalData.ts`](./src/data/festivalData.ts).
+1. In your GitHub repository **Settings -> Pages -> Custom domain**, enter your domain name (e.g., `aura2026.com`).
+2. Add a `CNAME` record in your DNS provider pointing to `gsidgdhwkasjsg.github.io`.
+3. Check the "Enforce HTTPS" box. SSL certificates are generated automatically.
