@@ -1,325 +1,197 @@
 import React, { useState } from 'react';
 import { 
-  Mail, Phone, MapPin, Instagram, Youtube, Linkedin, 
-  Send, Shield, Heart, ExternalLink, X, FileText, CheckCircle2 
+  GraduationCap, 
+  Mail, 
+  CheckCircle2, 
+  Linkedin, 
+  Twitter, 
+  Github, 
+  Youtube, 
+  Heart,
+  ArrowRight
 } from 'lucide-react';
-import { COMMITTEE_MEMBERS, FESTIVAL_INFO } from '../data/festivalData';
-import { soundEngine } from '../utils/audio';
+import { CATEGORIES } from '../data/mockData';
 
-export const Footer: React.FC = () => {
-  const [activeModal, setActiveModal] = useState<'privacy' | 'terms' | 'conduct' | null>(null);
+interface FooterProps {
+  onNavigate: (view: string, param?: string) => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
+  const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
     if (newsletterEmail.trim()) {
-      soundEngine.playClickSFX();
       setSubscribed(true);
       setNewsletterEmail('');
+      setTimeout(() => setSubscribed(false), 5000);
     }
   };
 
   return (
-    <footer id="contact" className="relative bg-fest-dark border-t border-white/10 pt-20 pb-12 overflow-hidden">
-      {/* Background ambient lighting */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-48 bg-gradient-to-b from-fest-purple/15 to-transparent blur-3xl pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Organizing Committee Strip */}
-        <div className="mb-20">
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <span className="text-xs font-mono font-bold tracking-widest text-fest-cyan uppercase block mb-1">
-              Leadership & Coordination
-            </span>
-            <h3 className="font-display font-black text-2xl sm:text-3xl text-white">
-              Organizing Committee Contacts
-            </h3>
-            <p className="text-xs text-slate-400 mt-2">
-              Have questions regarding invitations, corporate sponsorship, or media passes? Connect directly.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {COMMITTEE_MEMBERS.map((member) => (
-              <div
-                key={member.id}
-                className="group rounded-3xl bg-fest-card border border-white/10 hover:border-fest-cyan/40 p-5 backdrop-blur-xl transition-all hover:-translate-y-1 shadow-glass text-center"
-              >
-                <div className="relative w-20 h-20 mx-auto mb-4 rounded-2xl overflow-hidden border-2 border-fest-purple/40 group-hover:border-fest-cyan transition-colors">
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <h4 className="font-display font-bold text-base text-white group-hover:text-fest-cyan transition-colors">
-                  {member.name}
-                </h4>
-                <div className="text-xs font-mono font-semibold text-fest-pink mt-0.5">
-                  {member.role}
-                </div>
-                <div className="text-[11px] text-slate-400 font-sans mt-0.5 line-clamp-1">
-                  {member.department}
-                </div>
-
-                <div className="mt-4 pt-3 border-t border-white/5 space-y-1 text-xs font-mono">
-                  <a
-                    href={`mailto:${member.email}`}
-                    className="flex items-center justify-center space-x-1.5 text-slate-300 hover:text-white truncate"
-                  >
-                    <Mail className="w-3 h-3 text-fest-cyan shrink-0" />
-                    <span className="truncate">{member.email}</span>
-                  </a>
-                  <a
-                    href={`tel:${member.phone}`}
-                    className="flex items-center justify-center space-x-1.5 text-slate-400 hover:text-fest-yellow"
-                  >
-                    <Phone className="w-3 h-3 text-fest-yellow shrink-0" />
-                    <span>{member.phone}</span>
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 4-Column Main Footer */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-16 border-b border-white/10">
-          {/* Col 1: Festival Brand & Bio (4 cols) */}
-          <div className="lg:col-span-4 space-y-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-fest-pink to-fest-cyan flex items-center justify-center font-display font-black text-base text-white">
-                A
-              </div>
-              <span className="font-display font-black text-2xl tracking-widest text-white">
-                AURA 2026
-              </span>
+    <footer className="bg-navy-950 text-slate-300 border-t border-navy-900 font-sans">
+      
+      {/* Newsletter Banner */}
+      <div className="border-b border-navy-900 bg-navy-900/40 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+              <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                Get our free 2026 Tech Career Roadmap
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-xl">
+                Join 85,000+ professionals receiving our weekly curated breakdowns of emerging AI tools, engineering architecture, and hiring trends.
+              </p>
             </div>
-            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-sm">
-              North India's flagship inter-collegiate cultural fest celebrating music, dramatics,
-              street dance, cyber fashion, and competitive gaming.
-            </p>
-            <div className="text-xs font-mono text-slate-400 space-y-1 pt-2">
-              <div className="flex items-center space-x-2">
-                <MapPin className="w-4 h-4 text-fest-pink shrink-0" />
-                <span>Sector 62, Tech City, New Delhi - 110001</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Mail className="w-4 h-4 text-fest-cyan shrink-0" />
-                <span>aura2026@aisdt.ac.in</span>
-              </div>
-            </div>
-          </div>
 
-          {/* Col 2: Quick Links (2 cols) */}
-          <div className="lg:col-span-2 space-y-3">
-            <h4 className="font-display font-bold text-sm uppercase tracking-wider text-white">
-              Navigation
-            </h4>
-            <ul className="space-y-2 text-xs font-medium text-slate-400">
-              <li><a href="#about" className="hover:text-fest-cyan transition-colors">About Festival</a></li>
-              <li><a href="#schedule" className="hover:text-fest-cyan transition-colors">Schedule & Timetable</a></li>
-              <li><a href="#lineup" className="hover:text-fest-cyan transition-colors">Star Night Headliners</a></li>
-              <li><a href="#gallery" className="hover:text-fest-cyan transition-colors">Visual Gallery</a></li>
-              <li><a href="#venue" className="hover:text-fest-cyan transition-colors">Campus Venue & Map</a></li>
-              <li><a href="#sponsors" className="hover:text-fest-cyan transition-colors">Sponsors & Partners</a></li>
-            </ul>
-          </div>
-
-          {/* Col 3: Legal & Policies (3 cols) */}
-          <div className="lg:col-span-3 space-y-3">
-            <h4 className="font-display font-bold text-sm uppercase tracking-wider text-white">
-              Guidelines & Rules
-            </h4>
-            <ul className="space-y-2 text-xs font-medium text-slate-400">
-              <li>
-                <button onClick={() => setActiveModal('conduct')} className="hover:text-fest-pink transition-colors text-left">
-                  Student Code of Conduct
-                </button>
-              </li>
-              <li>
-                <button onClick={() => setActiveModal('privacy')} className="hover:text-fest-pink transition-colors text-left">
-                  Data & Privacy Policy
-                </button>
-              </li>
-              <li>
-                <button onClick={() => setActiveModal('terms')} className="hover:text-fest-pink transition-colors text-left">
-                  Festival Terms & Conditions
-                </button>
-              </li>
-              <li>
-                <a href="#faq" className="hover:text-fest-pink transition-colors">
-                  Frequently Asked Questions
-                </a>
-              </li>
-            </ul>
-
-            {/* Social Media Links */}
-            <div className="pt-4">
-              <span className="text-[11px] font-mono text-slate-400 uppercase tracking-widest block mb-2.5">
-                Connect With Us
-              </span>
-              <div className="flex items-center space-x-3">
-                <a
-                  href="https://instagram.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  title="Instagram"
-                  className="p-2.5 rounded-xl bg-white/5 hover:bg-fest-pink/20 hover:text-fest-pink border border-white/10 transition-all shadow-glass"
-                >
-                  <Instagram className="w-4 h-4" />
-                </a>
-                <a
-                  href="https://youtube.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  title="YouTube"
-                  className="p-2.5 rounded-xl bg-white/5 hover:bg-red-500/20 hover:text-red-400 border border-white/10 transition-all shadow-glass"
-                >
-                  <Youtube className="w-4 h-4" />
-                </a>
-                <a
-                  href="https://linkedin.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  title="LinkedIn"
-                  className="p-2.5 rounded-xl bg-white/5 hover:bg-blue-500/20 hover:text-blue-400 border border-white/10 transition-all shadow-glass"
-                >
-                  <Linkedin className="w-4 h-4" />
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* Col 4: Newsletter Subscription (3 cols) */}
-          <div className="lg:col-span-3 space-y-3">
-            <h4 className="font-display font-bold text-sm uppercase tracking-wider text-white">
-              Stay In The Loop
-            </h4>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Subscribe to get secret headliner hints, schedule updates, and emergency transit alerts.
-            </p>
-
-            {subscribed ? (
-              <div className="p-3 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs flex items-center space-x-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                <span>You're subscribed! See you at AURA.</span>
-              </div>
-            ) : (
-              <form onSubmit={handleNewsletterSubmit} className="space-y-2">
-                <div className="relative">
+            <div className="w-full md:w-auto">
+              {subscribed ? (
+                <div className="px-5 py-3 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-xs font-bold flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  Roadmap PDF sent to your inbox! Welcome aboard.
+                </div>
+              ) : (
+                <form onSubmit={handleSubscribe} className="flex gap-2 w-full max-w-md">
                   <input
                     type="email"
                     required
-                    placeholder="Enter college email..."
+                    placeholder="Enter your email..."
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
-                    className="w-full bg-fest-card border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-fest-cyan"
+                    className="flex-1 px-4 py-3 text-xs bg-navy-950 text-white rounded-xl border border-navy-800 focus:outline-hidden focus:border-brand-500"
                   />
                   <button
                     type="submit"
-                    className="absolute right-1.5 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-lg bg-fest-cyan text-fest-dark font-mono font-bold text-xs"
+                    className="px-5 py-3 rounded-xl text-xs font-bold bg-brand-600 hover:bg-brand-500 text-white shadow-md transition-colors cursor-pointer shrink-0"
                   >
-                    Join
+                    Subscribe Free
                   </button>
-                </div>
-              </form>
-            )}
-          </div>
-        </div>
-
-        {/* Bottom Copyright & Credit */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-slate-500 gap-4">
-          <div>
-            © 2026 AURA Cultural Fest. All Rights Reserved. Apex Institute of Science & Technology.
-          </div>
-          <div className="flex items-center space-x-1 text-slate-400">
-            <span>Crafted with</span>
-            <Heart className="w-3.5 h-3.5 text-fest-pink fill-fest-pink inline" />
-            <span>for collegiate creators worldwide.</span>
+                </form>
+              )}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Policy Modals */}
-      {activeModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-xl animate-in fade-in">
-          <div className="relative w-full max-w-xl bg-fest-card border border-white/20 rounded-3xl p-6 sm:p-8 shadow-2xl max-h-[85vh] overflow-y-auto">
-            <button
-              onClick={() => setActiveModal(null)}
-              className="absolute top-5 right-5 p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white"
+      {/* Main Footer Links */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+          
+          {/* Brand Info */}
+          <div className="lg:col-span-2 space-y-4">
+            <div 
+              onClick={() => onNavigate('home')}
+              className="flex items-center gap-2.5 cursor-pointer group select-none"
             >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="flex items-center space-x-2 text-fest-cyan mb-2 font-mono text-xs uppercase font-bold">
-              <FileText className="w-4 h-4" />
-              <span>Official Document</span>
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white shadow-md">
+                <GraduationCap className="w-6 h-6 stroke-[2.2]" />
+              </div>
+              <span className="text-2xl font-extrabold tracking-tight text-white group-hover:text-brand-400 transition-colors">
+                EDU<span className="text-brand-500">VERSITY</span>
+              </span>
             </div>
 
-            <h3 className="font-display font-black text-2xl text-white mb-4 capitalize">
-              {activeModal === 'conduct' && 'Student Code of Conduct & Safety Guidelines'}
-              {activeModal === 'privacy' && 'Attendee Privacy Policy & Registration Data'}
-              {activeModal === 'terms' && 'Festival Terms, Ticketing & Valedictory Rules'}
-            </h3>
+            <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
+              EDUVERSITY is an accredited next-generation online learning platform empowering over 120,000+ ambitious creators, engineers, and founders across 140 countries.
+            </p>
 
-            <div className="text-xs sm:text-sm text-slate-300 space-y-3 leading-relaxed">
-              {activeModal === 'conduct' && (
-                <>
-                  <p>
-                    1. <strong>Identity Verification:</strong> Every student entering the campus must
-                    carry their official physical college student ID card alongside their digital QR pass.
-                  </p>
-                  <p>
-                    2. <strong>Zero Tolerance:</strong> Drug consumption, alcoholic substances, weapons,
-                    and harassment of any form will lead to immediate campus escort and legal reporting.
-                  </p>
-                  <p>
-                    3. <strong>Respect For Art & Campus:</strong> Damage to sound equipment, stage lighting,
-                    or college infrastructure will be heavily fined to the participating contingent.
-                  </p>
-                </>
-              )}
+            <p className="text-xs italic text-brand-400 font-serif">
+              "Learn Skills. Build Your Future."
+            </p>
 
-              {activeModal === 'privacy' && (
-                <>
-                  <p>
-                    1. <strong>Data Collection:</strong> We collect only candidate name, college affiliation,
-                    phone number, and email strictly for the purpose of issuing passes and competition schedules.
-                  </p>
-                  <p>
-                    2. <strong>Storage:</strong> All registrations are stored locally in your browser and on
-                    secure encrypted servers. We do not sell attendee data to third-party advertisers.
-                  </p>
-                </>
-              )}
-
-              {activeModal === 'terms' && (
-                <>
-                  <p>
-                    1. <strong>Valedictory & Prizes:</strong> Cash prizes are disbursed via NEFT/UPI to the
-                    designated team leader or solo winner within 7 business days following document verification.
-                  </p>
-                  <p>
-                    2. <strong>Jury Decisions:</strong> Decisions made by the official judges and juries for
-                    all competitions are final and binding.
-                  </p>
-                </>
-              )}
-            </div>
-
-            <div className="mt-6 pt-4 border-t border-white/10 text-right">
-              <button
-                onClick={() => setActiveModal(null)}
-                className="px-5 py-2 rounded-xl bg-fest-purple text-white font-mono text-xs font-bold"
-              >
-                Close
-              </button>
+            {/* Social Icons */}
+            <div className="flex items-center gap-3 pt-2">
+              <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="w-8 h-8 rounded-lg bg-navy-900 hover:bg-brand-600 flex items-center justify-center text-slate-400 hover:text-white transition-colors">
+                <Linkedin className="w-4 h-4" />
+              </a>
+              <a href="https://twitter.com" target="_blank" rel="noreferrer" className="w-8 h-8 rounded-lg bg-navy-900 hover:bg-brand-600 flex items-center justify-center text-slate-400 hover:text-white transition-colors">
+                <Twitter className="w-4 h-4" />
+              </a>
+              <a href="https://github.com" target="_blank" rel="noreferrer" className="w-8 h-8 rounded-lg bg-navy-900 hover:bg-brand-600 flex items-center justify-center text-slate-400 hover:text-white transition-colors">
+                <Github className="w-4 h-4" />
+              </a>
+              <a href="https://youtube.com" target="_blank" rel="noreferrer" className="w-8 h-8 rounded-lg bg-navy-900 hover:bg-brand-600 flex items-center justify-center text-slate-400 hover:text-white transition-colors">
+                <Youtube className="w-4 h-4" />
+              </a>
             </div>
           </div>
+
+          {/* Quick Links */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-white">Platform</h4>
+            <ul className="space-y-2 text-xs text-slate-400">
+              <li>
+                <button onClick={() => onNavigate('home')} className="hover:text-white transition-colors">
+                  Home
+                </button>
+              </li>
+              <li>
+                <button onClick={() => onNavigate('courses')} className="hover:text-white transition-colors">
+                  All Courses
+                </button>
+              </li>
+              <li>
+                <button onClick={() => onNavigate('categories')} className="hover:text-white transition-colors">
+                  Course Categories
+                </button>
+              </li>
+              <li>
+                <button onClick={() => onNavigate('instructors')} className="hover:text-white transition-colors">
+                  Faculty & Instructors
+                </button>
+              </li>
+              <li>
+                <button onClick={() => onNavigate('dashboard')} className="hover:text-white transition-colors">
+                  Student Dashboard
+                </button>
+              </li>
+              <li>
+                <button onClick={() => onNavigate('admin')} className="text-amber-400 hover:text-amber-300 font-semibold transition-colors">
+                  Admin Control Center
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          {/* Categories Links */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-white">Top Categories</h4>
+            <ul className="space-y-2 text-xs text-slate-400">
+              {CATEGORIES.slice(0, 5).map(cat => (
+                <li key={cat.id}>
+                  <button onClick={() => onNavigate('courses', cat.name)} className="hover:text-white transition-colors truncate max-w-[180px] text-left">
+                    {cat.name}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Legal & Accreditation */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-white">Trust & Compliance</h4>
+            <ul className="space-y-2 text-xs text-slate-400">
+              <li><button onClick={() => onNavigate('about')} className="hover:text-white">About Eduversity</button></li>
+              <li><a href="#" onClick={(e) => { e.preventDefault(); alert('Accredited Certification partner network.'); }} className="hover:text-white">Accreditation Standards</a></li>
+              <li><a href="#" onClick={(e) => { e.preventDefault(); alert('Privacy policy: 100% compliant with GDPR.'); }} className="hover:text-white">Privacy Policy</a></li>
+              <li><a href="#" onClick={(e) => { e.preventDefault(); alert('Terms of Service.'); }} className="hover:text-white">Terms of Service</a></li>
+              <li><a href="#" onClick={(e) => { e.preventDefault(); alert('Security whitepaper & bug bounty.'); }} className="hover:text-white">Security & RLS Policies</a></li>
+            </ul>
+          </div>
+
         </div>
-      )}
+
+        {/* Bottom Copyright */}
+        <div className="mt-16 pt-8 border-t border-navy-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+          <p>© 2026 EDUVERSITY Global Education Inc. All rights reserved.</p>
+          <p className="flex items-center gap-1">
+            Engineered with <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" /> for the next generation of builders.
+          </p>
+        </div>
+
+      </div>
+
     </footer>
   );
 };

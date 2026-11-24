@@ -1,126 +1,174 @@
-# ⚡ AURA 2026 — Official College Cultural Fest Website
-> **"Where Talent Meets the Extraordinary"**  
-> *North India's premier inter-collegiate cultural festival featuring 3 days of high-octane music, dance battles, star nights, runway fashion, gaming, and 48+ competitions with a ₹15,00,000 prize pool.*
+# EDUVERSITY — Next-Generation Online Learning Platform
+
+> *"Learn Skills. Build Your Future."*
+
+![EDUVERSITY Platform Banner](https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80)
+
+**EDUVERSITY** is a modern, responsive, full-stack online learning platform engineered with a premium EdTech SaaS aesthetic (inspired by Coursera, Udemy, Skillshare, and Linear). It provides end-to-end capabilities for discovering, enrolling, learning, rating, and managing educational courses with verifiable certificates and comprehensive administrative oversight.
 
 ---
 
-## 🌟 Live Public Websites
+## 🌟 Key Features
 
-- **GitHub Pages Live HTTPS URL**: [https://gsidgdhwkasjsg.github.io/aura-2026-fest/](https://gsidgdhwkasjsg.github.io/aura-2026-fest/)
-- **Cloudflare Edge Live HTTPS URL**: [https://championships-few-composition-brighton.trycloudflare.com](https://championships-few-composition-brighton.trycloudflare.com)
-- **GitHub Source Code Repository**: [https://github.com/Gsidgdhwkasjsg/aura-2026-fest](https://github.com/Gsidgdhwkasjsg/aura-2026-fest)
+### 1. Brand Identity & Design System
+- **Palette**: Deep Navy (`#0B132B`, `#0F172A`), Electric Purple (`#7C3AED`, `#8B5CF6`), Crisp White and Soft Grey backgrounds (`#F8FAFC`).
+- **Typography**: Clean, geometric typography via *Plus Jakarta Sans* and *Inter*.
+- **Micro-Interactions**: Smooth card elevations, responsive hover transitions, subtle shadows, and celebratory confetti animations.
+
+### 2. High-Converting Homepage
+- **Navigation Bar**: Sticky glassmorphic top bar with live autocomplete search, wishlist counter badge, user avatar profile menu, and responsive mobile drawer.
+- **Hero Section**: Headline *"Unlock Your Potential Through Learning"*, real-time platform statistics (120,000+ Enrolled Students, 450+ Instructors, 98% Completion Rate, 4.9★ Average Rating), floating credentials, and interactive course video teaser.
+- **Trusted By Section**: Institutional partner badges (Google, Microsoft, Amazon, Meta, Netflix, Spotify, Stripe).
+- **Interactive Course Categories**: Grid of all 10 core technical and creative disciplines.
+- **Popular Courses Showcase**: Filterable tabs (All Trending, AI & Agents, Full-Stack Dev, 100% Free).
+- **Value Pillars**: Pragmatic curriculum, production codebases, AI-assisted learning, and lifetime access.
+- **Faculty Spotlight & Student Testimonials**: Verified outcome reviews from real students.
+- **Newsletter Engine**: Weekly curated tech roadmap with instant confirmation.
+
+### 3. 10 Interactive Disciplines & Course Catalog
+1. **Programming & Development** (Full-Stack TypeScript, Next.js, Node.js, Python, PostgreSQL)
+2. **Artificial Intelligence** (Autonomous AI Agents, Multi-Agent Swarms, RAG, PyTorch)
+3. **Data Science** (Predictive ML, Pandas, Scikit-Learn, SQL Analytics)
+4. **Business & Entrepreneurship** (Venture Capital, Scaling, Product-Market Fit)
+5. **UI/UX Design** (Enterprise Design Systems in Figma, Tokens, Micro-Interactions)
+6. **Graphic Design** (Brand Identity Guidelines, Vector Illustration, Photoshop Mockups)
+7. **Digital Marketing** (Growth Loops, Programmatic SEO, Paid Acquisition)
+8. **Cybersecurity** (Ethical Hacking, OWASP Top 10, Kali Linux Labs)
+9. **Finance** (Wall Street DCF Valuation, LBO Models, Corporate M&A)
+10. **Personal Development** (Executive Presence, Public Speaking, Negotiation)
+
+### 4. Course Details & Learning Experience
+- **Dedicated Course Pages**: Breadcrumbs, prerequisites, 6-8 key outcomes checklist, syllabus breakdown by module, instructor bio, and 5-star rating breakdown bars.
+- **Dedicated Learning Classroom (`/learn/:courseId`)**:
+  - Distraction-free full-screen layout.
+  - Video player with play/pause, seek, volume, speed controls, and fullscreen.
+  - Collapsible curriculum sidebar with completion checkmarks.
+  - *"Mark as Completed"* toggle with live progress percentage calculation.
+  - Tabbed lesson workspace: Overview & Notes, Downloadable Resources (PDFs, templates, code zip), Community Q&A forum, and Certificate status.
+  - **Celebratory Confetti & Automatic Certificate Unlocking** at 100% completion!
+
+### 5. Verifiable Certificates System
+- Automated credential generation with unique serial codes (e.g. `CERT-EDU-2026-PY501`).
+- Gold foil aesthetic with official seal, recipient name, course title, faculty signatures, and grade.
+- Printable / Save to PDF mode and sharable verification links.
+
+### 6. Authentication & Roles
+- Student and Instructor registration, login, logout, and password reset.
+- **1-Click Demo Logins** for instantaneous evaluation:
+  - **Demo Student**: `student@eduversity.com`
+  - **Demo Admin**: `admin@eduversity.com`
+- User profile management with avatar, title, and bio customization.
+
+### 7. Enrollment & Payments Engine
+- **Free Courses**: 1-click instant enrollment.
+- **Paid Courses**:
+  - Checkout modal with itemized pricing, taxes, and discounts.
+  - Coupon Code support (Use **`EDU2026`** for an instant 20% discount).
+  - Stripe & Razorpay test-mode gateway simulation with credit card form validation.
+  - Instant synchronization with Student Dashboard.
+
+### 8. Student Reviews & Ratings
+- Interactive 1–5 star rating picker and written feedback submission.
+- Enrolled student verification guard (only enrolled students can post reviews).
+- Author edit/delete permissions.
+- Dynamic recalculation of course average rating and review counts.
+
+### 9. Faculty & Instructor Profiles
+- Comprehensive directory of instructors with search and domain filtering.
+- Dedicated instructor profile pages detailing bios, expertise tags, student counts, average ratings, social links, and all courses taught.
+
+### 10. Executive Admin Control Center
+- Role-based server-side / client-side authorization.
+- Real-time business intelligence metrics: Total Students, Total Courses, Total Faculty, Total Revenue ($412,950+), and active enrollments.
+- Interactive monthly revenue bar chart visualization.
+- **Course CRUD**: Modal forms to create new courses, edit pricing/content, or delete programs.
+- **Student Accounts & Payments**: Live ledger of transactions (Stripe/Razorpay) and student status.
+- **Review Moderation**: Approve or delete flagged student reviews.
 
 ---
 
-## ✨ Website Features & Structure
+## 🛠️ Technology Stack
 
-1. **Cyberpunk & Cinematic Aesthetic**:
-   - Deep obsidian `#06040a`, neon pink `#FF007A`, electric cyan `#00F0FF`, midnight purple `#7928CA`, electric yellow `#FFE600`.
-   - Custom 60FPS neon Canvas particle background reacting to mouse interaction.
-   - Built-in Web Audio API Cyberpunk ambient soundscape toggle with animated audio visualizer.
-
-2. **Hero Section**:
-   - High-impact glitch festival typography ("AURA 2026").
-   - Live Countdown Timer targeting March 19, 2026 (Days, Hours, Minutes, Seconds).
-   - "Register For Events", "Explore 48+ Events", and "Watch Aftermovie" video modal.
-   - Live running neon ticker marquee.
-
-3. **About & Statistics**:
-   - Cultural legacy storytelling & campus overview.
-   - 4 glassmorphic highlight cards: Star Nights, Competitions, Vogue Nexus Runway, and Cyber Arena.
-   - Animated statistics: 18,000+ Footfall, 85+ Universities, 48+ Events, ₹15 Lakhs+ Prize Pool, 12+ Artists.
-
-4. **Interactive Schedule & Timetable**:
-   - 48+ detailed competitions across 3 festival days:
-     - *Day 1: Genesis* (Battle of the Bands, Nukkad Natak, Western Solo, Valorant)
-     - *Day 2: Eclipse* (Mega Dance Battle, Vogue Nexus Runway, Hip-Hop Cypher, RoboWars)
-     - *Day 3: Supernova* (All-Styles Dance Clash, ByteBurst Hackathon, BGMI Finals, Classical Fusion)
-   - Filter by Day or Category (Music, Dance, Singing, Drama, Fashion, Art, Gaming, Tech).
-   - Real-time search by keyword, stage, or rules.
-   - Modal for complete event rules, judging criteria, and student coordinator contact.
-   - Direct "Register" button pre-selecting the event in the form.
-
-5. **Performers & Star Headliners**:
-   - Featured Grand Headliner Hero banner (Lost Frequencies & Nikhil Chinapa) with audio preview and schedule.
-   - Performer cards with high-res photography, genre tags, day & time badges, and bios (The Yellow Diary, Jonita Gandhi, Seedhe Maut, Anubhav Singh Bassi, Shadow & Light).
-
-6. **Campus Venue & Logistics**:
-   - Interactive Google Maps embed with custom dark-contrast styling.
-   - Transit tabs: Delhi Metro connectivity & shuttle buses, 2,500+ parking slots with EV charging, entry gates 1-3, and security guidelines.
-
-7. **Registration System & Database**:
-   - Full Name, Email, Phone, College Name, Department, Year of Study (1st - PG).
-   - Solo vs Team mode with dynamic member addition & email collection.
-   - Outstation campus accommodation requests.
-   - Real-time client-side validation & duplicate registration detection.
-   - **Persistent Storage**: Saved in browser IndexedDB / LocalStorage (survives refreshes and offline reloads).
-   - **Instant Holographic Pass Generation**: Produces a digital festival pass with unique Ticket ID (`AURA-26-XXXX`), attendee info, and a scannable QR Code that can be printed or saved.
-
-8. **Organizer / Admin Portal**:
-   - Accessible via the "Admin / Passes" button in the navigation header.
-   - View all registered candidates, filter by Individual/Team, search by name or college.
-   - View & reprint digital passes.
-   - **Export to CSV**: 1-click download of all attendee records for organizers.
-
-9. **Photo Gallery & Lightbox**:
-   - Responsive masonry grid with category filters (Concerts, Dance, Drama, Crowd, Behind the scenes).
-   - Fullscreen Lightbox with Next/Prev controls and keyboard arrow support.
-
-10. **Tiered Sponsors Wall**:
-    - Title Sponsor (Red Bull), Powered By (Intel Core Ultra, Spotify), Associate Sponsors (OnePlus, boAt), Media Partners (BookMyShow, MTV India, Dominos x Coke).
-    - Sponsorship inquiry button with pre-filled email.
-
-11. **FAQ & Help Section**:
-    - Accordion with questions regarding free passes, college IDs, hostel accommodations, multi-event registration, and prize disbursements.
-
-12. **Footer & Committee Contacts**:
-    - Direct contact details for Student Conveners, Cultural President, Dean, and Security Chief.
-    - Social links (Instagram, YouTube, LinkedIn).
-    - Interactive modals for Student Code of Conduct, Privacy Policy, and Fest Terms.
+| Layer | Technologies |
+| :--- | :--- |
+| **Frontend** | React 18, TypeScript, Tailwind CSS, Vite |
+| **Animations & Icons** | Framer Motion, Lucide React, Canvas Confetti |
+| **State & Persistence** | Reactive LocalStorage Engine (`EduversityDatabase`) with event-driven cross-tab sync |
+| **Backend & Database** | PostgreSQL schema (`schema.sql`), Supabase JavaScript SDK (`@supabase/supabase-js`) |
+| **Payments Integration**| Stripe & Razorpay Test Sandboxes with Coupon Code Engine |
+| **Routing & Architecture**| Declarative View Router with History & Deep-Linking Support |
+| **Deployment** | Vercel (`vercel.json`), GitHub Actions |
 
 ---
 
-## 🚀 Local Development Setup
+## 🚀 Quick Start Guide
+
+### Prerequisites
+- Node.js `v18.0.0` or higher
+- npm `v9.0.0` or higher
+
+### Installation
 
 ```bash
-# 1. Clone or open the repository
-git clone https://github.com/Gsidgdhwkasjsg/aura-2026-fest.git
-cd aura-2026-fest
+# 1. Clone the repository
+git clone https://github.com/Gsidgdhwkasjsg/eduversity-learning-platform.git
+cd eduversity-learning-platform
 
 # 2. Install dependencies
 npm install
 
-# 3. Start local development server
-npm run dev
+# 3. Configure environment variables (optional)
+cp .env.example .env
 
-# 4. Build for production
+# 4. Start the local development server
+npm run dev
+```
+
+Visit `http://localhost:5173` to explore the platform.
+
+### Production Build
+
+```bash
+# Build optimized static bundle
 npm run build
 
-# 5. Preview the production build
+# Preview production build locally
 npm run preview
 ```
 
 ---
 
-## 🌐 Deployment Instructions
+## 🗄️ Database Architecture (`schema.sql`)
 
-### Automatic Deployment via GitHub Actions
-Every commit pushed to the `main` branch automatically triggers `.github/workflows/deploy.yml` which builds and publishes the production site to **GitHub Pages** within 60 seconds.
+The repository includes a production-grade PostgreSQL / Supabase schema in `schema.sql` covering:
+- `profiles`: User accounts, avatars, roles (`student`, `instructor`, `admin`).
+- `categories`: 10 core technical and creative disciplines.
+- `instructors`: Faculty bios, company credentials, social handles, ratings.
+- `courses`: Pricing, difficulty levels, duration, what-you-will-learn bullet points, requirements.
+- `modules` & `lessons`: Multi-tiered curriculums with video URLs and resource files.
+- `enrollments`: Student enrollments and percentage progress tracking.
+- `lesson_progress`: Individual lesson completion states.
+- `reviews`: Student 1-5 star ratings and reviews with unique constraint per student.
+- `wishlist`: Student bookmarked courses.
+- `payments`: Transaction ledger with Stripe / Razorpay transaction IDs.
+- `certificates`: Unique certificate serial numbers, grades, and verification URLs.
+- **Row Level Security (RLS)** policies ensuring private data isolation.
 
-### Deploy to Vercel (Optional alternative)
-1. Go to [vercel.com](https://vercel.com) and click **"Add New Project"**.
-2. Import your GitHub repository `Gsidgdhwkasjsg/aura-2026-fest`.
-3. Framework preset will automatically detect **Vite**.
-4. Click **"Deploy"**.
+---
 
-### Deploy to Netlify (Optional alternative)
-1. Go to [app.netlify.com](https://app.netlify.com).
-2. Click **"Add new site" -> "Import an existing project"**.
-3. Select `Gsidgdhwkasjsg/aura-2026-fest`.
-4. Build command: `npm run build` | Publish directory: `dist`.
-5. Click **"Deploy site"**.
+## 🔑 Demo Credentials
 
-### Connecting a Custom Domain (e.g. `aurafest2026.com`)
-1. In your GitHub repository **Settings -> Pages -> Custom domain**, enter your domain name (e.g., `aura2026.com`).
-2. Add a `CNAME` record in your DNS provider pointing to `gsidgdhwkasjsg.github.io`.
-3. Check the "Enforce HTTPS" box. SSL certificates are generated automatically.
+| Role | Email | Password | Access Capabilities |
+| :--- | :--- | :--- | :--- |
+| **Student** | `student@eduversity.com` | Any (or click 1-Click Demo) | Browse, enroll, watch lessons, mark progress, submit reviews, view certificates |
+| **Admin** | `admin@eduversity.com` | Any (or click 1-Click Demo) | All student features + Admin Dashboard, Course CRUD, Revenue metrics, Review moderation |
+
+*Note: The platform features instant 1-click demo login buttons inside the login modal and user menu.*
+
+---
+
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+Developed with passion by the **EDUVERSITY Global Education Team**.

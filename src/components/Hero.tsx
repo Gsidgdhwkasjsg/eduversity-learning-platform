@@ -1,261 +1,234 @@
-import React, { useState, useEffect } from 'react';
-import { Sparkles, Calendar, MapPin, Play, ArrowRight, ShieldCheck, Flame, Trophy } from 'lucide-react';
-import { FESTIVAL_INFO } from '../data/festivalData';
-import { ParticleCanvas } from './ParticleCanvas';
-import { soundEngine } from '../utils/audio';
+import React from 'react';
+import { 
+  Sparkles, 
+  ArrowRight, 
+  Play, 
+  Star, 
+  Users, 
+  Award, 
+  CheckCircle2, 
+  TrendingUp,
+  ShieldCheck,
+  BookOpen
+} from 'lucide-react';
+import { Course } from '../types';
 
-interface TimeLeft {
-  days: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
+interface HeroProps {
+  onExplore: () => void;
+  onStartFree: () => void;
+  onPreviewCourse: (courseId: string) => void;
 }
 
-export const Hero: React.FC = () => {
-  // Target date: March 19, 2026 at 09:00 AM IST
-  const targetDate = new Date('2026-03-19T09:00:00+05:30').getTime();
-
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0
-  });
-
-  const [showVideoModal, setShowVideoModal] = useState(false);
-
-  useEffect(() => {
-    const calculateTimeLeft = () => {
-      const now = new Date().getTime();
-      const difference = targetDate - now;
-
-      if (difference > 0) {
-        setTimeLeft({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60)
-        });
-      } else {
-        // Fallback for ongoing or past
-        setTimeLeft({ days: 114, hours: 14, minutes: 22, seconds: 45 });
-      }
-    };
-
-    calculateTimeLeft();
-    const timer = setInterval(calculateTimeLeft, 1000);
-    return () => clearInterval(timer);
-  }, [targetDate]);
-
-  const scrollToSection = (id: string) => {
-    soundEngine.playClickSFX();
-    const elem = document.querySelector(id);
-    if (elem) elem.scrollIntoView({ behavior: 'smooth' });
-  };
-
+export const Hero: React.FC<HeroProps> = ({
+  onExplore,
+  onStartFree,
+  onPreviewCourse
+}) => {
   return (
-    <section className="relative min-h-screen flex flex-col justify-between pt-28 pb-12 overflow-hidden bg-fest-dark">
-      {/* Background Neon Lights and Atmospheric Glows */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-to-tr from-fest-pink/20 via-fest-purple/25 to-fest-cyan/20 blur-[140px] pointer-events-none rounded-full" />
-      <div className="absolute -top-40 -left-40 w-96 h-96 bg-fest-purple/30 blur-[120px] pointer-events-none rounded-full" />
-      <div className="absolute top-1/2 -right-40 w-96 h-96 bg-fest-cyan/25 blur-[120px] pointer-events-none rounded-full" />
+    <section className="relative overflow-hidden pt-8 pb-16 md:pt-14 md:pb-24 bg-gradient-to-b from-white via-slate-50/70 to-slate-100/50">
+      {/* Decorative background glow orbs */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-brand-200/40 rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="absolute top-10 right-10 w-72 h-72 bg-indigo-200/30 rounded-full blur-2xl pointer-events-none -z-10" />
 
-      {/* Cyber Grid Lines Overlay */}
-      <div className="absolute inset-0 cyber-grid opacity-35 pointer-events-none" />
-
-      {/* Canvas Particle Effect */}
-      <ParticleCanvas />
-
-      {/* Hero Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 flex flex-col items-center justify-center text-center">
-        {/* Edition Pill Badge */}
-        <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white/[0.05] border border-white/10 backdrop-blur-md mb-8 animate-pulse-glow">
-          <span className="flex h-2 w-2 relative">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-fest-cyan opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-fest-cyan"></span>
-          </span>
-          <span className="text-xs font-mono tracking-wider uppercase text-slate-300">
-            North India's Largest Inter-Collegiate Cultural Festival
-          </span>
-          <span className="text-fest-pink font-bold text-xs">★ EDITION 14</span>
-        </div>
-
-        {/* Massive Festival Title */}
-        <div className="relative mb-4">
-          <h1 className="text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] font-display font-black tracking-tight leading-none uppercase select-none">
-            <span className="block bg-gradient-to-b from-white via-slate-100 to-slate-400 bg-clip-text text-transparent drop-shadow-2xl">
-              AURA
-            </span>
-            <span className="block -mt-3 sm:-mt-6 md:-mt-8 lg:-mt-12 bg-gradient-to-r from-fest-pink via-fest-purple-light to-fest-cyan bg-clip-text text-transparent tracking-widest text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-glow-pink">
-              2026
-            </span>
-          </h1>
-        </div>
-
-        {/* Tagline & Short Intro */}
-        <p className="font-display font-bold text-lg sm:text-2xl md:text-3xl text-fest-cyan text-glow-cyan tracking-wide mb-3 max-w-3xl">
-          "{FESTIVAL_INFO.tagline}"
-        </p>
-        <p className="text-sm sm:text-base md:text-lg text-slate-300 max-w-2xl font-normal leading-relaxed mb-8">
-          Join 18,000+ creators, musicians, and performers across 3 days of supersonic music,
-          electrifying dance wars, and futuristic stage spectacles.
-        </p>
-
-        {/* Event Key Details Strip */}
-        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs sm:text-sm font-medium text-slate-300 mb-10">
-          <div className="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg bg-white/[0.04] border border-white/10 backdrop-blur-md">
-            <Calendar className="w-4 h-4 text-fest-pink" />
-            <span>{FESTIVAL_INFO.dates}</span>
-          </div>
-          <div className="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg bg-white/[0.04] border border-white/10 backdrop-blur-md">
-            <MapPin className="w-4 h-4 text-fest-cyan" />
-            <span>Apex Mega Arena, New Delhi</span>
-          </div>
-          <div className="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg bg-white/[0.04] border border-white/10 backdrop-blur-md">
-            <Trophy className="w-4 h-4 text-fest-yellow" />
-            <span>₹15,00,000 Prize Pool</span>
-          </div>
-        </div>
-
-        {/* Countdown Timer */}
-        <div className="w-full max-w-xl mb-10">
-          <div className="text-[11px] font-mono uppercase tracking-widest text-slate-400 mb-3 flex items-center justify-center space-x-2">
-            <Flame className="w-3.5 h-3.5 text-fest-pink animate-bounce" />
-            <span>The Extraordinary Begins In</span>
-            <Flame className="w-3.5 h-3.5 text-fest-pink animate-bounce" />
-          </div>
-
-          <div className="grid grid-cols-4 gap-2 sm:gap-4">
-            {[
-              { label: 'DAYS', value: timeLeft.days, color: 'text-fest-cyan' },
-              { label: 'HOURS', value: timeLeft.hours, color: 'text-fest-pink' },
-              { label: 'MINS', value: timeLeft.minutes, color: 'text-fest-purple-light' },
-              { label: 'SECS', value: timeLeft.seconds, color: 'text-fest-yellow' }
-            ].map((slot) => (
-              <div
-                key={slot.label}
-                className="relative group p-3 sm:p-4 rounded-2xl bg-fest-card/80 border border-white/10 backdrop-blur-lg hover:border-fest-pink/40 transition-all shadow-glass"
-              >
-                <div className="absolute inset-0 bg-gradient-to-b from-white/[0.03] to-transparent rounded-2xl pointer-events-none" />
-                <span className={`block font-display font-black text-2xl sm:text-4xl md:text-5xl ${slot.color} tracking-tight`}>
-                  {String(slot.value).padStart(2, '0')}
-                </span>
-                <span className="block text-[10px] sm:text-xs font-mono font-medium text-slate-400 tracking-widest mt-1">
-                  {slot.label}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-          {/* CTA 1: Register Now */}
-          <button
-            onClick={() => scrollToSection('#register')}
-            className="w-full sm:w-auto relative group overflow-hidden px-8 py-4 rounded-xl font-display font-bold text-base text-white transition-all transform hover:-translate-y-0.5 active:translate-y-0 shadow-glow-pink"
-          >
-            <span className="absolute inset-0 bg-gradient-to-r from-fest-pink via-fest-purple to-fest-cyan opacity-95 group-hover:opacity-100 transition-opacity" />
-            <span className="relative flex items-center justify-center space-x-2">
-              <span>Register For Events</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </span>
-          </button>
-
-          {/* CTA 2: Explore Events */}
-          <button
-            onClick={() => scrollToSection('#schedule')}
-            className="w-full sm:w-auto px-7 py-4 rounded-xl font-display font-semibold text-base text-slate-200 bg-white/[0.05] border border-white/15 hover:border-fest-cyan hover:text-fest-cyan hover:bg-fest-cyan/[0.05] backdrop-blur-md transition-all flex items-center justify-center space-x-2 shadow-glass"
-          >
-            <Sparkles className="w-5 h-5 text-fest-cyan" />
-            <span>Explore 48+ Events</span>
-          </button>
-
-          {/* Teaser Button */}
-          <button
-            onClick={() => {
-              soundEngine.playClickSFX();
-              setShowVideoModal(true);
-            }}
-            className="w-full sm:w-auto px-4 py-4 rounded-xl font-display font-medium text-sm text-slate-300 hover:text-white flex items-center justify-center space-x-2 hover:bg-white/5 transition-all"
-          >
-            <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center border border-white/20">
-              <Play className="w-3.5 h-3.5 fill-white text-white translate-x-0.5" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+          
+          {/* Left Hero Content */}
+          <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
+            
+            {/* Pill Tag */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-50 border border-brand-200/60 shadow-xs">
+              <span className="flex h-2 w-2 rounded-full bg-brand-600 animate-ping" />
+              <span className="text-xs font-bold text-brand-700 tracking-wide">
+                NEXT-GEN EDTECH PLATFORM 2026
+              </span>
+              <span className="text-slate-300">|</span>
+              <span className="text-xs font-semibold text-slate-600 flex items-center gap-1">
+                <Sparkles className="w-3.5 h-3.5 text-brand-600" /> 500+ Certified Courses
+              </span>
             </div>
-            <span>Watch Aftermovie</span>
-          </button>
-        </div>
-      </div>
 
-      {/* Live Running Festival Ticker Marquee */}
-      <div className="relative z-10 mt-12 py-3 bg-fest-purple-deep/70 border-y border-white/10 backdrop-blur-md overflow-hidden">
-        <div className="flex whitespace-nowrap animate-marquee space-x-8 text-xs font-mono font-bold tracking-widest text-slate-300">
-          {[
-            '⚡ 18,000+ REGISTERED ATTENDEES',
-            '🎵 12+ STAR HEADLINERS',
-            '🏆 ₹15,00,000 IN CASH PRIZES',
-            '💃 NORTH INDIA DANCE CHAMPIONSHIP',
-            '🎸 SYNC-SHOCK BATTLE OF THE BANDS',
-            '👗 VOGUE NEXUS CYBERPUNK RUNWAY',
-            '🎮 VALORANT & BGMI LAN FINALS',
-            '🌟 MARCH 19-21, 2026 • APEX ARENA NEW DELHI'
-          ].map((item, idx) => (
-            <span key={idx} className="flex items-center space-x-4">
-              <span>{item}</span>
-              <span className="text-fest-pink font-black text-sm">★</span>
-            </span>
-          ))}
-          {/* Duplicate for infinite seamless scroll */}
-          {[
-            '⚡ 18,000+ REGISTERED ATTENDEES',
-            '🎵 12+ STAR HEADLINERS',
-            '🏆 ₹15,00,000 IN CASH PRIZES',
-            '💃 NORTH INDIA DANCE CHAMPIONSHIP',
-            '🎸 SYNC-SHOCK BATTLE OF THE BANDS',
-            '👗 VOGUE NEXUS CYBERPUNK RUNWAY',
-            '🎮 VALORANT & BGMI LAN FINALS',
-            '🌟 MARCH 19-21, 2026 • APEX ARENA NEW DELHI'
-          ].map((item, idx) => (
-            <span key={`dup-${idx}`} className="flex items-center space-x-4">
-              <span>{item}</span>
-              <span className="text-fest-pink font-black text-sm">★</span>
-            </span>
-          ))}
-        </div>
-      </div>
+            {/* Main Headline */}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-navy-900 tracking-tight leading-[1.12]">
+              Unlock Your Potential Through{' '}
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-brand-600 via-brand-700 to-indigo-600">
+                Learning.
+              </span>
+            </h1>
 
-      {/* Video Aftermovie Modal */}
-      {showVideoModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-xl animate-in fade-in">
-          <div className="relative w-full max-w-4xl bg-fest-card rounded-2xl overflow-hidden border border-fest-pink/40 shadow-glow-mixed">
-            <div className="p-4 border-b border-white/10 flex items-center justify-between">
-              <div className="flex items-center space-x-2 font-display font-bold text-white">
-                <Play className="w-4 h-4 text-fest-pink fill-fest-pink" />
-                <span>AURA Festival Cinematic Official Aftermovie</span>
-              </div>
+            {/* Supporting Description */}
+            <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
+              Master high-income, in-demand skills from world-class industry leaders. Build real-world projects, earn accredited certificates, and accelerate your dream career in Artificial Intelligence, Software Engineering, UI/UX, and Business.
+            </p>
+
+            {/* Call To Actions */}
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
               <button
-                onClick={() => setShowVideoModal(false)}
-                className="text-slate-400 hover:text-white px-2 py-1 text-sm rounded-lg bg-white/5"
+                onClick={onExplore}
+                className="w-full sm:w-auto px-8 py-4 rounded-xl text-base font-bold bg-navy-900 hover:bg-brand-600 text-white shadow-xl shadow-navy-900/15 hover:shadow-brand-600/25 transition-all flex items-center justify-center gap-2.5 group cursor-pointer"
               >
-                ✕ Close
+                Explore Courses
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+
+              <button
+                onClick={onStartFree}
+                className="w-full sm:w-auto px-8 py-4 rounded-xl text-base font-bold bg-white hover:bg-slate-50 text-slate-800 border-2 border-slate-200/90 hover:border-brand-300 shadow-sm transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+              >
+                <Sparkles className="w-4 h-4 text-brand-600" />
+                Start Learning Free
               </button>
             </div>
-            <div className="aspect-video w-full bg-black relative">
-              <iframe
-                className="w-full h-full"
-                src="https://www.youtube-nocookie.com/embed/fJ9rUzIMcZQ?autoplay=1&mute=0&controls=1"
-                title="Aura Fest Aftermovie"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+
+            {/* Trust Bullet Badges */}
+            <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-y-2 gap-x-6 text-xs font-semibold text-slate-500">
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500" /> 100% Free Lifetime Access Options
+              </span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Industry Recognized Certificates
+              </span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500" /> 30-Day Money-Back Guarantee
+              </span>
             </div>
-            <div className="p-4 bg-fest-dark flex items-center justify-between text-xs text-slate-400 font-mono">
-              <span>Recorded live at Apex Arena Main Amphitheatre</span>
-              <span className="text-fest-cyan">4K Ultra HD • Dolby Atmos Audio</span>
+
+            {/* Student Statistics Bar */}
+            <div className="pt-6 border-t border-slate-200/70 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 text-center lg:text-left">
+              <div>
+                <p className="text-2xl sm:text-3xl font-extrabold text-navy-900">120K+</p>
+                <p className="text-xs font-medium text-slate-500">Active Students</p>
+              </div>
+              <div>
+                <p className="text-2xl sm:text-3xl font-extrabold text-navy-900">450+</p>
+                <p className="text-xs font-medium text-slate-500">Expert Mentors</p>
+              </div>
+              <div>
+                <p className="text-2xl sm:text-3xl font-extrabold text-navy-900">98%</p>
+                <p className="text-xs font-medium text-slate-500">Completion Rate</p>
+              </div>
+              <div>
+                <div className="flex items-center justify-center lg:justify-start gap-1">
+                  <span className="text-2xl sm:text-3xl font-extrabold text-navy-900">4.9</span>
+                  <div className="flex text-amber-400">
+                    <Star className="w-4 h-4 fill-amber-400" />
+                  </div>
+                </div>
+                <p className="text-xs font-medium text-slate-500">Average Rating</p>
+              </div>
             </div>
+
+          </div>
+
+          {/* Right Hero Visuals / Interactive Card */}
+          <div className="lg:col-span-5 relative flex justify-center">
+            
+            {/* Outer Decorative Ring */}
+            <div className="relative w-full max-w-md">
+              
+              {/* Main Visual Card */}
+              <div className="relative rounded-3xl bg-white p-3.5 shadow-2xl border border-slate-200/90 transition-all hover:shadow-brand-500/10">
+                <div className="relative rounded-2xl overflow-hidden aspect-video bg-slate-900 group">
+                  <img
+                    src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1000&q=80"
+                    alt="Online Learning Classroom"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-navy-950/80 via-transparent to-transparent" />
+                  
+                  {/* Floating Play Button */}
+                  <button
+                    onClick={() => onPreviewCourse('course-ai-101')}
+                    className="absolute inset-0 m-auto w-16 h-16 rounded-full bg-white/95 text-brand-600 flex items-center justify-center shadow-xl hover:scale-110 hover:bg-white transition-all cursor-pointer group/play"
+                    title="Watch Course Preview"
+                  >
+                    <Play className="w-7 h-7 fill-brand-600 translate-x-0.5" />
+                  </button>
+
+                  {/* Top Badge */}
+                  <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-white/90 backdrop-blur-md text-xs font-bold text-navy-900 flex items-center gap-1.5 shadow-xs">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    Featured Spotlight
+                  </div>
+
+                  {/* Bottom Text Over Video */}
+                  <div className="absolute bottom-3 left-3 right-3 text-white">
+                    <p className="text-xs font-medium text-brand-300">Artificial Intelligence 2026</p>
+                    <h3 className="text-sm font-bold truncate">Autonomous AI Agents & Multi-Agent Swarms</h3>
+                  </div>
+                </div>
+
+                {/* Sub Card Info */}
+                <div className="p-4 pt-3 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <img
+                      src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&q=80"
+                      alt="Instructor Dr. Sarah Jenkins"
+                      className="w-10 h-10 rounded-full object-cover border-2 border-brand-500"
+                    />
+                    <div>
+                      <p className="text-xs font-bold text-navy-900">Dr. Sarah Jenkins</p>
+                      <p className="text-[11px] text-slate-500">Ex-DeepMind Scientist</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="flex items-center gap-1 justify-end">
+                      <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                      <span className="text-xs font-bold text-navy-900">4.96</span>
+                    </div>
+                    <span className="text-[11px] text-slate-500">34,200 enrolled</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Floating Badge 1 - Top Right */}
+              <div className="absolute -top-6 -right-6 sm:-right-8 bg-white/95 backdrop-blur-md rounded-2xl p-3 shadow-xl border border-slate-100 flex items-center gap-3 animate-bounce [animation-duration:4s]">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center">
+                  <Award className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-[11px] font-bold text-slate-400 uppercase">Certified</p>
+                  <p className="text-xs font-extrabold text-navy-900">Verified Credential</p>
+                </div>
+              </div>
+
+              {/* Floating Badge 2 - Bottom Left */}
+              <div className="absolute -bottom-6 -left-6 sm:-left-8 bg-white/95 backdrop-blur-md rounded-2xl p-3 shadow-xl border border-slate-100 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
+                  <Users className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-xs font-extrabold text-navy-900">1,420+ Online</span>
+                  </div>
+                  <p className="text-[11px] text-slate-500">Learning right now</p>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        {/* Brand Logos / Trusted By Bar */}
+        <div className="mt-16 pt-10 border-t border-slate-200/70 text-center">
+          <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-6">
+            Trusted by teams and alumni at world-leading organizations
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-14 opacity-60 grayscale hover:grayscale-0 transition-all">
+            <span className="text-lg font-extrabold tracking-tight text-slate-700">Google</span>
+            <span className="text-lg font-extrabold tracking-tight text-slate-700">Microsoft</span>
+            <span className="text-lg font-extrabold tracking-tight text-slate-700">Amazon</span>
+            <span className="text-lg font-extrabold tracking-tight text-slate-700">Meta</span>
+            <span className="text-lg font-extrabold tracking-tight text-slate-700">Netflix</span>
+            <span className="text-lg font-extrabold tracking-tight text-slate-700">Spotify</span>
+            <span className="text-lg font-extrabold tracking-tight text-slate-700">Stripe</span>
           </div>
         </div>
-      )}
+
+      </div>
     </section>
   );
 };

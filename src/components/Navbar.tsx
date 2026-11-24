@@ -1,228 +1,493 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, X, Volume2, VolumeX, Ticket, Shield, Sparkles, Calendar, ChevronRight } from 'lucide-react';
-import { soundEngine } from '../utils/audio';
+import React, { useState, useEffect, useRef } from 'react';
+import { 
+  GraduationCap, 
+  Search, 
+  Heart, 
+  User as UserIcon, 
+  LogOut, 
+  LayoutDashboard, 
+  ShieldCheck, 
+  BookOpen, 
+  Award, 
+  Menu, 
+  X, 
+  Sparkles,
+  ChevronDown
+} from 'lucide-react';
+import { db } from '../services/db';
+import { User, Course } from '../types';
 
 interface NavbarProps {
-  onOpenAdmin: () => void;
-  onOpenMyTicket: () => void;
+  currentView: string;
+  onNavigate: (view: string, param?: string) => void;
+  onOpenAuth: (initialMode?: 'login' | 'register') => void;
+  onSelectCourse: (course: Course) => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenAdmin, onOpenMyTicket }) => {
-  const [isScrolled, setIsScrolled] = useState(false);
+export const Navbar: React.FC<NavbarProps> = ({
+  currentView,
+  onNavigate,
+  onOpenAuth,
+  onSelectCourse
+}) => {
+  const [user, setUser] = useState<User | null>(db.getCurrentUser());
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<Course[]>([]);
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [audioActive, setAudioActive] = useState(false);
+  const [wishlistCount, setWishlistCount] = useState(0);
 
+  const searchContainerRef = useRef<HTMLDivElement>(null);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+
+  // Sync state with database changes
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 40);
+    const handleDbChange = () => {
+      const currentUser = db.getCurrentUser();
+      setUser(currentUser);
+      setWishlistCount(currentUser ? currentUser.wishlistCourseIds.length : 0);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    handleDbChange();
+    window.addEventListener('eduversity_db_change', handleDbChange);
+    return () => window.removeEventListener('eduversity_db_change', handleDbChange);
   }, []);
 
-  const toggleSound = () => {
-    const state = soundEngine.toggle();
-    setAudioActive(state);
-  };
+  // Handle Search autocomplete
+  useEffect(() => {
+    if (searchQuery.trim().length > 1) {
+      const q = searchQuery.toLowerCase();
+      const allCourses = db.getCourses();
+      const filtered = allCourses.filter(c => 
+        c.title.toLowerCase().includes(q) ||
+        c.category.toLowerCase().includes(q) ||
+        c.instructor.name.toLowerCase().includes(q)
+      ).slice(0, 5);
+      setSearchResults(filtered);
+      setShowSearchResults(true);
+    } else {
+      setSearchResults([]);
+      setShowSearchResults(false);
+    }
+  }, [searchQuery]);
 
-  const navLinks = [
-    { label: 'About', href: '#about' },
-    { label: 'Schedule', href: '#schedule' },
-    { label: 'Headliners', href: '#lineup' },
-    { label: 'Gallery', href: '#gallery' },
-    { label: 'Venue', href: '#venue' },
-    { label: 'Sponsors', href: '#sponsors' },
-    { label: 'FAQ', href: '#faq' },
-  ];
+  // Click outside listener for search & user menu
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
+        setShowSearchResults(false);
+      }
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
-  const handleLinkClick = (href: string) => {
-    soundEngine.playClickSFX();
-    setMobileMenuOpen(false);
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      onNavigate('courses', searchQuery.trim());
+      setShowSearchResults(false);
     }
   };
 
+  const handleSelectSearchResult = (course: Course) => {
+    onSelectCourse(course);
+    setShowSearchResults(false);
+    setSearchQuery('');
+  };
+
   return (
-    <>
-      <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled
-            ? 'bg-fest-dark/85 backdrop-blur-xl border-b border-white/10 shadow-glass py-3'
-            : 'bg-transparent py-5'
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <a
-              href="#"
-              className="group flex items-center space-x-3 cursor-pointer"
-              onClick={() => soundEngine.playClickSFX()}
+    <header className="sticky top-0 z-40 w-full bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-all">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20 gap-4">
+          
+          {/* Logo */}
+          <div 
+            onClick={() => onNavigate('home')}
+            className="flex items-center gap-2.5 cursor-pointer group select-none shrink-0"
+          >
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-navy-900 via-brand-700 to-brand-500 flex items-center justify-center text-white shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform">
+              <GraduationCap className="w-6 h-6 stroke-[2.2]" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-2xl font-extrabold tracking-tight text-navy-900 group-hover:text-brand-600 transition-colors">
+                EDU<span className="text-brand-600">VERSITY</span>
+              </span>
+              <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400 -mt-1 hidden sm:block">
+                Learn Skills. Build Future.
+              </span>
+            </div>
+          </div>
+
+          {/* Navigation Links - Desktop */}
+          <nav className="hidden lg:flex items-center gap-1 xl:gap-2 text-sm font-semibold text-slate-600">
+            <button
+              onClick={() => onNavigate('home')}
+              className={`px-3 py-2 rounded-lg transition-colors ${
+                currentView === 'home' 
+                  ? 'text-brand-600 bg-brand-50/80 font-bold' 
+                  : 'hover:text-navy-900 hover:bg-slate-100/70'
+              }`}
             >
-              <div className="relative w-10 h-10 rounded-xl bg-gradient-to-tr from-fest-pink via-fest-purple to-fest-cyan p-[2px] transition-transform group-hover:scale-105 shadow-glow-mixed">
-                <div className="w-full h-full bg-fest-dark rounded-[10px] flex items-center justify-center">
-                  <span className="font-display font-black text-xl tracking-tighter bg-gradient-to-r from-fest-pink to-fest-cyan bg-clip-text text-transparent">
-                    A
-                  </span>
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <div className="flex items-center space-x-1.5">
-                  <span className="font-display font-black text-xl tracking-widest text-white group-hover:text-glow-cyan transition-all">
-                    AURA
-                  </span>
-                  <span className="font-display font-bold text-sm text-fest-cyan px-1.5 py-0.5 rounded bg-fest-cyan/10 border border-fest-cyan/30">
-                    2026
-                  </span>
-                </div>
-                <span className="text-[10px] font-mono tracking-wider text-slate-400 uppercase">
-                  Where Talent Meets Extraordinary
-                </span>
-              </div>
-            </a>
+              Home
+            </button>
+            <button
+              onClick={() => onNavigate('courses')}
+              className={`px-3 py-2 rounded-lg transition-colors ${
+                currentView === 'courses' 
+                  ? 'text-brand-600 bg-brand-50/80 font-bold' 
+                  : 'hover:text-navy-900 hover:bg-slate-100/70'
+              }`}
+            >
+              Courses
+            </button>
+            <button
+              onClick={() => onNavigate('categories')}
+              className={`px-3 py-2 rounded-lg transition-colors ${
+                currentView === 'categories' 
+                  ? 'text-brand-600 bg-brand-50/80 font-bold' 
+                  : 'hover:text-navy-900 hover:bg-slate-100/70'
+              }`}
+            >
+              Categories
+            </button>
+            <button
+              onClick={() => onNavigate('instructors')}
+              className={`px-3 py-2 rounded-lg transition-colors ${
+                currentView === 'instructors' 
+                  ? 'text-brand-600 bg-brand-50/80 font-bold' 
+                  : 'hover:text-navy-900 hover:bg-slate-100/70'
+              }`}
+            >
+              Instructors
+            </button>
+            <button
+              onClick={() => onNavigate('about')}
+              className={`px-3 py-2 rounded-lg transition-colors ${
+                currentView === 'about' 
+                  ? 'text-brand-600 bg-brand-50/80 font-bold' 
+                  : 'hover:text-navy-900 hover:bg-slate-100/70'
+              }`}
+            >
+              About
+            </button>
+          </nav>
 
-            {/* Desktop Navigation Links */}
-            <nav className="hidden lg:flex items-center space-x-1 bg-white/[0.03] border border-white/[0.08] rounded-full px-4 py-1.5 backdrop-blur-md">
-              {navLinks.map((link) => (
-                <button
-                  key={link.label}
-                  onClick={() => handleLinkClick(link.href)}
-                  className="px-3.5 py-1.5 text-sm font-medium text-slate-300 hover:text-fest-cyan transition-colors rounded-full hover:bg-white/[0.06]"
+          {/* Search Bar with live autocomplete */}
+          <div ref={searchContainerRef} className="relative hidden md:block flex-1 max-w-xs lg:max-w-sm xl:max-w-md">
+            <form onSubmit={handleSearchSubmit}>
+              <div className="relative">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="text"
+                  placeholder="Search courses, skills, instructors..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => searchQuery.length > 1 && setShowSearchResults(true)}
+                  className="w-full pl-10 pr-4 py-2 text-sm bg-slate-100/80 hover:bg-slate-100 focus:bg-white text-slate-900 placeholder-slate-400 rounded-full border border-slate-200/80 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 focus:outline-hidden transition-all"
+                />
+              </div>
+            </form>
+
+            {/* Live Autocomplete Dropdown */}
+            {showSearchResults && searchResults.length > 0 && (
+              <div className="absolute left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                <div className="p-2 border-b border-slate-100 flex items-center justify-between text-xs text-slate-400 font-medium px-3">
+                  <span>Matching Courses</span>
+                  <span className="text-brand-600">{searchResults.length} found</span>
+                </div>
+                <div className="divide-y divide-slate-50 max-h-80 overflow-y-auto">
+                  {searchResults.map(c => (
+                    <div
+                      key={c.id}
+                      onClick={() => handleSelectSearchResult(c)}
+                      className="p-3 hover:bg-slate-50 cursor-pointer flex items-center gap-3 transition-colors"
+                    >
+                      <img src={c.thumbnail} alt={c.title} className="w-12 h-9 rounded object-cover shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-xs font-semibold text-slate-900 truncate">{c.title}</h4>
+                        <p className="text-[11px] text-slate-500 truncate">{c.instructor.name} • {c.category}</p>
+                      </div>
+                      <span className="text-xs font-bold text-brand-600 shrink-0">
+                        {c.price === 0 ? 'FREE' : `$${c.price}`}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <div 
+                  onClick={handleSearchSubmit}
+                  className="p-2.5 bg-slate-50 text-center text-xs font-semibold text-brand-600 hover:text-brand-700 cursor-pointer border-t border-slate-100"
                 >
-                  {link.label}
-                </button>
-              ))}
-            </nav>
+                  View all results for "{searchQuery}"
+                </div>
+              </div>
+            )}
+          </div>
 
-            {/* Right CTAs */}
-            <div className="hidden sm:flex items-center space-x-3">
-              {/* Soundscape Ambient Toggle */}
+          {/* Right Action Icons & Auth */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            
+            {/* Wishlist Button */}
+            {user && (
               <button
-                onClick={toggleSound}
-                title={audioActive ? 'Mute cyberpunk soundscape' : 'Play ambient fest soundscape'}
-                className={`relative p-2.5 rounded-xl border transition-all ${
-                  audioActive
-                    ? 'bg-fest-cyan/20 border-fest-cyan text-fest-cyan shadow-glow-cyan'
-                    : 'bg-white/5 border-white/10 text-slate-400 hover:text-white hover:border-white/30'
-                }`}
+                onClick={() => onNavigate('dashboard', 'wishlist')}
+                title="Saved Courses"
+                className="relative p-2.5 rounded-full text-slate-600 hover:text-brand-600 hover:bg-brand-50 transition-colors"
               >
-                {audioActive ? (
-                  <div className="flex items-center space-x-1.5">
-                    <Volume2 className="w-4 h-4 animate-pulse" />
-                    <span className="flex space-x-0.5 items-end h-3">
-                      <span className="w-0.5 h-3 bg-fest-cyan animate-bounce" style={{ animationDelay: '0ms' }} />
-                      <span className="w-0.5 h-2 bg-fest-cyan animate-bounce" style={{ animationDelay: '150ms' }} />
-                      <span className="w-0.5 h-3.5 bg-fest-cyan animate-bounce" style={{ animationDelay: '300ms' }} />
-                    </span>
-                  </div>
-                ) : (
-                  <VolumeX className="w-4 h-4" />
+                <Heart className="w-5 h-5" />
+                {wishlistCount > 0 && (
+                  <span className="absolute top-1 right-1 w-4 h-4 bg-rose-500 text-white rounded-full text-[10px] font-bold flex items-center justify-center animate-pulse">
+                    {wishlistCount}
+                  </span>
                 )}
               </button>
+            )}
 
-              {/* Passes & Admin Button */}
-              <button
-                onClick={() => {
-                  soundEngine.playClickSFX();
-                  onOpenAdmin();
-                }}
-                className="hidden md:flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-mono font-medium text-slate-300 bg-white/5 border border-white/10 hover:border-fest-purple hover:text-white transition-all"
-                title="View Registrations Database / Admin"
-              >
-                <Shield className="w-3.5 h-3.5 text-fest-purple-light" />
-                <span>Admin / Passes</span>
-              </button>
+            {/* Auth State */}
+            {user ? (
+              <div ref={userMenuRef} className="relative">
+                <button
+                  onClick={() => setUserMenuOpen(!userMenuOpen)}
+                  className="flex items-center gap-2 p-1.5 rounded-full hover:bg-slate-100 transition-colors border border-slate-200/80"
+                >
+                  <img
+                    src={user.avatar}
+                    alt={user.name}
+                    className="w-8 h-8 rounded-full object-cover ring-2 ring-brand-500/30"
+                  />
+                  <div className="hidden sm:flex flex-col text-left pr-1">
+                    <span className="text-xs font-bold text-slate-800 leading-tight truncate max-w-[100px]">
+                      {user.name.split(' ')[0]}
+                    </span>
+                    <span className="text-[10px] font-semibold text-brand-600 uppercase tracking-wider">
+                      {user.role}
+                    </span>
+                  </div>
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-400 hidden sm:block" />
+                </button>
 
-              {/* Main Register CTA */}
-              <a
-                href="#register"
-                onClick={() => soundEngine.playClickSFX()}
-                className="relative group overflow-hidden px-5 py-2.5 rounded-xl font-display font-semibold text-sm text-white transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-glow-pink"
-              >
-                <span className="absolute inset-0 bg-gradient-to-r from-fest-pink via-fest-purple to-fest-cyan opacity-90 group-hover:opacity-100 transition-opacity" />
-                <span className="relative flex items-center space-x-2">
-                  <Sparkles className="w-4 h-4 text-fest-yellow animate-spin-slow" />
-                  <span>Register Now</span>
-                </span>
-              </a>
-            </div>
+                {/* Dropdown Menu */}
+                {userMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                    <div className="px-4 py-3 border-b border-slate-100">
+                      <p className="text-xs font-semibold text-slate-400">Signed in as</p>
+                      <p className="text-sm font-bold text-slate-900 truncate">{user.name}</p>
+                      <p className="text-xs text-slate-500 truncate">{user.email}</p>
+                      <div className="mt-2 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-100 text-brand-700">
+                        {user.role === 'admin' ? 'Platform Administrator' : 'Verified Student'}
+                      </div>
+                    </div>
+
+                    <div className="py-1">
+                      <button
+                        onClick={() => {
+                          onNavigate('dashboard');
+                          setUserMenuOpen(false);
+                        }}
+                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 hover:text-brand-600 transition-colors"
+                      >
+                        <LayoutDashboard className="w-4 h-4 text-slate-400" />
+                        Student Dashboard
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          onNavigate('dashboard', 'courses');
+                          setUserMenuOpen(false);
+                        }}
+                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 hover:text-brand-600 transition-colors"
+                      >
+                        <BookOpen className="w-4 h-4 text-slate-400" />
+                        My Enrolled Courses
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          onNavigate('dashboard', 'certificates');
+                          setUserMenuOpen(false);
+                        }}
+                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 hover:text-brand-600 transition-colors"
+                      >
+                        <Award className="w-4 h-4 text-slate-400" />
+                        Certificates
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          onNavigate('admin');
+                          setUserMenuOpen(false);
+                        }}
+                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-amber-600 font-semibold hover:bg-amber-50 transition-colors"
+                      >
+                        <ShieldCheck className="w-4 h-4 text-amber-500" />
+                        Admin Dashboard
+                      </button>
+                    </div>
+
+                    {/* Quick Demo Switcher */}
+                    <div className="p-2 mx-2 bg-slate-50 rounded-xl my-1 border border-slate-100">
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                        Quick Demo Switcher
+                      </p>
+                      <div className="grid grid-cols-2 gap-1.5">
+                        <button
+                          onClick={() => {
+                            db.loginAsDemoStudent();
+                            setUserMenuOpen(false);
+                          }}
+                          className={`text-xs py-1 px-2 rounded-lg font-medium transition-colors ${
+                            user.role === 'student' ? 'bg-brand-600 text-white' : 'bg-white hover:bg-slate-100 text-slate-700'
+                          }`}
+                        >
+                          Student Demo
+                        </button>
+                        <button
+                          onClick={() => {
+                            db.loginAsDemoAdmin();
+                            setUserMenuOpen(false);
+                          }}
+                          className={`text-xs py-1 px-2 rounded-lg font-medium transition-colors ${
+                            user.role === 'admin' ? 'bg-amber-600 text-white' : 'bg-white hover:bg-slate-100 text-slate-700'
+                          }`}
+                        >
+                          Admin Demo
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="pt-1 border-t border-slate-100">
+                      <button
+                        onClick={() => {
+                          db.logout();
+                          setUserMenuOpen(false);
+                        }}
+                        className="w-full flex items-center gap-3 px-4 py-2 text-sm text-rose-600 hover:bg-rose-50 transition-colors"
+                      >
+                        <LogOut className="w-4 h-4 text-rose-500" />
+                        Sign Out
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => onOpenAuth('login')}
+                  className="px-4 py-2 text-sm font-semibold text-slate-700 hover:text-navy-900 transition-colors"
+                >
+                  Log In
+                </button>
+                <button
+                  onClick={() => onOpenAuth('register')}
+                  className="px-4 py-2 text-sm font-bold bg-brand-600 hover:bg-brand-700 text-white rounded-full shadow-md shadow-brand-500/20 hover:shadow-lg transition-all"
+                >
+                  Sign Up Free
+                </button>
+              </div>
+            )}
 
             {/* Mobile Hamburger Button */}
-            <div className="flex items-center space-x-2 lg:hidden">
-              <button
-                onClick={toggleSound}
-                className={`p-2 rounded-lg border text-xs ${
-                  audioActive
-                    ? 'bg-fest-cyan/20 border-fest-cyan text-fest-cyan'
-                    : 'bg-white/5 border-white/10 text-slate-400'
-                }`}
-              >
-                {audioActive ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-              </button>
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 rounded-xl bg-white/5 border border-white/10 text-slate-300 hover:text-white"
-                aria-label="Toggle menu"
-              >
-                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
-            </div>
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 rounded-xl text-slate-600 hover:text-navy-900 hover:bg-slate-100 lg:hidden transition-colors"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
         </div>
+      </div>
 
-        {/* Mobile Slide-Down Menu */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden bg-fest-card/95 backdrop-blur-2xl border-b border-white/10 px-6 py-6 shadow-2xl transition-all animate-in fade-in slide-in-from-top-4 duration-200">
-            <div className="flex flex-col space-y-3">
-              <div className="flex items-center justify-between pb-3 border-b border-white/10 text-xs text-slate-400 font-mono">
-                <span className="flex items-center space-x-1">
-                  <Calendar className="w-3.5 h-3.5 text-fest-cyan" />
-                  <span>MARCH 19 - 21, 2026</span>
-                </span>
-                <span className="text-fest-pink font-semibold">NEW DELHI</span>
-              </div>
-
-              {navLinks.map((link) => (
-                <button
-                  key={link.label}
-                  onClick={() => handleLinkClick(link.href)}
-                  className="flex items-center justify-between py-2.5 text-left font-display font-medium text-slate-200 hover:text-fest-cyan border-b border-white/5 text-base"
-                >
-                  <span>{link.label}</span>
-                  <ChevronRight className="w-4 h-4 text-slate-500" />
-                </button>
-              ))}
-
-              <div className="pt-3 grid grid-cols-2 gap-3">
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    onOpenAdmin();
-                  }}
-                  className="flex items-center justify-center space-x-2 py-3 px-3 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-slate-200"
-                >
-                  <Shield className="w-3.5 h-3.5 text-fest-purple-light" />
-                  <span>Admin DB</span>
-                </button>
-
-                <a
-                  href="#register"
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    soundEngine.playClickSFX();
-                  }}
-                  className="flex items-center justify-center space-x-2 py-3 px-3 rounded-xl bg-gradient-to-r from-fest-pink to-fest-purple text-xs font-display font-semibold text-white shadow-glow-pink"
-                >
-                  <Ticket className="w-3.5 h-3.5" />
-                  <span>Register Now</span>
-                </a>
-              </div>
+      {/* Mobile Drawer Menu */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-4 animate-in slide-in-from-top-4 duration-200">
+          {/* Mobile Search */}
+          <form onSubmit={(e) => { handleSearchSubmit(e); setMobileMenuOpen(false); }}>
+            <div className="relative">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Search courses..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-100 rounded-xl border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-brand-500"
+              />
             </div>
+          </form>
+
+          {/* Links */}
+          <div className="flex flex-col space-y-1 text-sm font-semibold text-slate-700">
+            <button
+              onClick={() => { onNavigate('home'); setMobileMenuOpen(false); }}
+              className="text-left px-3 py-2 rounded-lg hover:bg-slate-100"
+            >
+              Home
+            </button>
+            <button
+              onClick={() => { onNavigate('courses'); setMobileMenuOpen(false); }}
+              className="text-left px-3 py-2 rounded-lg hover:bg-slate-100"
+            >
+              All Courses
+            </button>
+            <button
+              onClick={() => { onNavigate('categories'); setMobileMenuOpen(false); }}
+              className="text-left px-3 py-2 rounded-lg hover:bg-slate-100"
+            >
+              Browse Categories
+            </button>
+            <button
+              onClick={() => { onNavigate('instructors'); setMobileMenuOpen(false); }}
+              className="text-left px-3 py-2 rounded-lg hover:bg-slate-100"
+            >
+              Top Instructors
+            </button>
+            <button
+              onClick={() => { onNavigate('about'); setMobileMenuOpen(false); }}
+              className="text-left px-3 py-2 rounded-lg hover:bg-slate-100"
+            >
+              About Eduversity
+            </button>
+            {user && (
+              <>
+                <button
+                  onClick={() => { onNavigate('dashboard'); setMobileMenuOpen(false); }}
+                  className="text-left px-3 py-2 rounded-lg hover:bg-slate-100 text-brand-600 font-bold"
+                >
+                  Student Dashboard
+                </button>
+                <button
+                  onClick={() => { onNavigate('admin'); setMobileMenuOpen(false); }}
+                  className="text-left px-3 py-2 rounded-lg hover:bg-amber-50 text-amber-600 font-bold"
+                >
+                  Admin Portal
+                </button>
+              </>
+            )}
           </div>
-        )}
-      </header>
-    </>
+
+          {/* Mobile Auth action */}
+          {!user && (
+            <div className="pt-2 flex flex-col gap-2">
+              <button
+                onClick={() => { onOpenAuth('login'); setMobileMenuOpen(false); }}
+                className="w-full py-2.5 text-center text-sm font-semibold text-slate-800 bg-slate-100 rounded-xl hover:bg-slate-200"
+              >
+                Log In
+              </button>
+              <button
+                onClick={() => { onOpenAuth('register'); setMobileMenuOpen(false); }}
+                className="w-full py-2.5 text-center text-sm font-bold text-white bg-brand-600 rounded-xl hover:bg-brand-700 shadow-md shadow-brand-500/20"
+              >
+                Sign Up Free
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+    </header>
   );
 };
